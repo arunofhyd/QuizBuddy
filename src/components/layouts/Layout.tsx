@@ -34,7 +34,7 @@ export const Layout: React.FC<LayoutProps> = ({
         </div>
         
         {/* Main content */}
-        <div className="relative z-10">
+        <div className="relative z-10 min-h-screen">
           {children}
         </div>
       </div>
