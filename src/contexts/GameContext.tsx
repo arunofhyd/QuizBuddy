@@ -183,25 +183,32 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
       return;
     }
 
-    // TODO: Implement Firestore security rules to ensure only the host can kick players.
-
     try {
       setError(null); // Clear any previous error
-      const currentPlayers = gameSession.players;
-      const updatedPlayers = currentPlayers.filter(player => player.id !== playerId);
+      
+      // Find the player being kicked
+      const kickedPlayer = gameSession.players.find(p => p.id === playerId);
+      if (!kickedPlayer) {
+        setError('Player not found.');
+        return;
+      }
+      
+      const updatedPlayers = gameSession.players.filter(player => player.id !== playerId);
 
       const sessionRef = doc(db, 'gameSessions', gameSession.id);
-      await updateDoc(sessionRef, { players: updatedPlayers });
+      await updateDoc(sessionRef, { 
+        players: updatedPlayers.map(player => ({
+          ...player,
+          joinedAt: Timestamp.fromDate(player.joinedAt)
+        }))
+      });
 
-      // The onSnapshot listener should update the local gameSession state.
-      // If the kicked player is the currentPlayer, they might need to be handled (e.g., navigated away or shown a message).
-      // For now, this is handled by the UI reacting to the player disappearing from the list or gameSession updates.
-      console.log(`Player ${playerId} kicked successfully.`);
+      console.log(`Player ${kickedPlayer.nickname} (${playerId}) kicked successfully.`);
 
     } catch (err) {
       console.error('Error kicking player:', err);
       setError('Failed to kick player. Please try again.');
-      // Optionally re-throw or handle more gracefully
+      throw err;
     }
   };
 
@@ -226,11 +233,16 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
           
           setGameSession(updatedSession);
           
-          // Update current player data if it exists in the session
+          // Check if current player was kicked
           if (currentPlayer) {
             const updatedCurrentPlayer = updatedSession.players.find(p => p.id === currentPlayer.id);
             if (updatedCurrentPlayer) {
               setCurrentPlayer(updatedCurrentPlayer);
+            } else {
+              // Player was kicked - they're no longer in the session
+              setError('You have been removed from the game by the host.');
+              setCurrentPlayer(null);
+              setGameSession(null);
             }
           }
         } else {

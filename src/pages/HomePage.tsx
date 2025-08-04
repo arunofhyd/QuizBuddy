@@ -68,7 +68,7 @@ export const HomePage: React.FC = () => {
                 onChange={(e) => setRoomCode(e.target.value.toUpperCase())}
                 placeholder="Enter room code"
                 maxLength={6}
-                className="text-center text-lg font-bold tracking-wider"
+                className="text-center text-lg font-bold tracking-wider uppercase"
                 required
               />
 
@@ -83,7 +83,10 @@ export const HomePage: React.FC = () => {
 
               {error && (
                 <div className="p-3 bg-red-500/20 border border-red-500/30 rounded-lg text-red-300 text-sm">
-                  {error}
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg">⚠️</span>
+                    <span>{error}</span>
+                  </div>
                 </div>
               )}
 

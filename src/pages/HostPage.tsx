@@ -271,20 +271,13 @@ export const HostPage: React.FC = () => {
       setError("You do not have permission to kick players.");
       return;
     }
-    // Prevent host from kicking themselves (although UI should ideally prevent this option)
-    if (playerId === currentUser?.uid) {
-      setError("You cannot kick yourself.");
-      return;
-    }
+    
     try {
+      setError(''); // Clear any previous errors
       await kickPlayer(playerId);
-      console.log(`Player ${playerId} kicked by host.`);
-      // setError(''); // Clear previous errors if any, or set a success message
     } catch (err) {
       console.error('HostPage: Error kicking player:', err);
-      // The kickPlayer function in context already sets an error,
-      // but we can set a more specific one here or log additionally.
-      setError('Failed to kick player from HostPage.');
+      setError('Failed to remove player. Please try again.');
     }
   };
 
@@ -339,6 +332,18 @@ export const HostPage: React.FC = () => {
           </Button>
         </div>
 
+        {error && (
+          <Card className="mb-6">
+            <div className="flex items-center gap-3 text-red-400">
+              <div className="text-2xl">⚠️</div>
+              <div>
+                <div className="font-semibold">Error</div>
+                <div className="text-sm text-red-300">{error}</div>
+              </div>
+            </div>
+          </Card>
+        )}
+
         {/* Game Status */}
         {!gameSession ? (
           <Card className="text-center">
@@ -364,19 +369,30 @@ export const HostPage: React.FC = () => {
               players={gameSession.players}
               roomCode={gameSession.roomCode}
               isHost={true}
-              onKickPlayer={handleKickPlayer} // Pass handleKickPlayer
+              onKickPlayer={handleKickPlayer}
+              gameStatus={gameSession.status}
             />
             
-            <div className="text-center">
+            <Card className="text-center">
+              <div className="mb-4">
+                <h3 className="text-lg font-semibold text-white mb-2">Ready to start?</h3>
+                <p className="text-white/70 text-sm">
+                  {gameSession.players.length === 0 
+                    ? 'Waiting for players to join...' 
+                    : `${gameSession.players.length} player${gameSession.players.length !== 1 ? 's' : ''} ready to play!`
+                  }
+                </p>
+              </div>
               <Button
                 onClick={startQuiz}
                 size="lg"
                 disabled={gameSession.players.length === 0}
+                className={gameSession.players.length === 0 ? 'opacity-50 cursor-not-allowed' : ''}
               >
                 <Play size={20} className="mr-2" />
-                Start Quiz
+                {gameSession.players.length === 0 ? 'Waiting for Players' : 'Start Quiz'}
               </Button>
-            </div>
+            </Card>
           </div>
         ) : gameSession.status === 'question' || gameSession.status === 'answer_reveal' ? (
           <div className="space-y-6">

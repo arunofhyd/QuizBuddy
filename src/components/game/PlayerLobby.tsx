@@ -1,22 +1,46 @@
 import React from 'react';
+import { useState } from 'react';
 import { Player } from '../../types';
 import { Card } from '../ui/Card';
-import { Button } from '../ui/Button'; // Added Button import
+import { Button } from '../ui/Button';
 import { Users, Crown } from 'lucide-react';
 
 interface PlayerLobbyProps {
   players: Player[];
   roomCode: string;
   isHost?: boolean;
-  onKickPlayer?: (playerId: string) => void; // Added onKickPlayer prop
+  onKickPlayer?: (playerId: string) => void;
+  gameStatus?: string;
 }
 
 export const PlayerLobby: React.FC<PlayerLobbyProps> = ({
   players,
   roomCode,
   isHost = false,
-  onKickPlayer
+  onKickPlayer,
+  gameStatus = 'waiting'
 }) => {
+  const [kickingPlayer, setKickingPlayer] = useState<string | null>(null);
+  
+  const handleKickPlayer = async (playerId: string, nickname: string) => {
+    if (!onKickPlayer) return;
+    
+    const confirmed = window.confirm(
+      `Are you sure you want to remove ${nickname} from the game? This action cannot be undone.`
+    );
+    
+    if (confirmed) {
+      try {
+        setKickingPlayer(playerId);
+        await onKickPlayer(playerId);
+      } catch (error) {
+        console.error('Failed to kick player:', error);
+      } finally {
+        setKickingPlayer(null);
+      }
+    }
+  };
+
   return (
     <div className="space-y-6">
       <Card className="text-center">
@@ -26,18 +50,31 @@ export const PlayerLobby: React.FC<PlayerLobbyProps> = ({
             Room Code: {roomCode}
           </h2>
           <p className="text-white/70">
-            {isHost ? 'Players are joining...' : 'Waiting for the game to start...'}
+            {isHost 
+              ? `${players.length} player${players.length !== 1 ? 's' : ''} in lobby` 
+              : 'Waiting for the game to start...'
+            }
           </p>
         </div>
         
         <div className="flex items-center justify-center gap-2 text-white/60">
           <Users size={20} />
-          <span>{players.length} player{players.length !== 1 ? 's' : ''} joined</span>
+          <span>
+            {players.length} player{players.length !== 1 ? 's' : ''} 
+            {gameStatus === 'waiting' ? ' joined' : ' playing'}
+          </span>
         </div>
       </Card>
 
       <Card>
-        <h3 className="text-xl font-semibold text-white mb-4">Players</h3>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-xl font-semibold text-white">Players</h3>
+          {isHost && players.length > 0 && (
+            <div className="text-sm text-white/60">
+              Click "Remove" to kick a player
+            </div>
+          )}
+        </div>
         {players.length === 0 ? (
           <p className="text-white/60 text-center py-8">
             No players have joined yet...
@@ -47,24 +84,26 @@ export const PlayerLobby: React.FC<PlayerLobbyProps> = ({
             {players.map((player) => (
               <div
                 key={player.id}
-                className="bg-white/10 rounded-lg p-3 flex items-center" // Removed justify-between to allow button to push to the right
+                className="bg-white/10 hover:bg-white/15 rounded-lg p-3 flex items-center transition-colors"
               >
-                <span className="text-white font-medium">{player.nickname}</span>
-                <div className={`w-3 h-3 rounded-full ml-2 mr-auto ${ // Added ml-2 for spacing and mr-auto to push button
+                <div className="flex items-center flex-1 min-w-0">
+                  <span className="text-white font-medium truncate">{player.nickname}</span>
+                  <div className={`w-3 h-3 rounded-full ml-2 flex-shrink-0 ${
                   player.isConnected ? 'bg-green-400' : 'bg-red-400'
-                }`} />
+                  }`} 
+                    title={player.isConnected ? 'Online' : 'Offline'}
+                  />
+                </div>
                 {isHost && onKickPlayer && (
                   <Button
                     variant="danger"
                     size="sm"
-                    onClick={() => {
-                      if (window.confirm(`Are you sure you want to kick ${player.nickname}?`)) {
-                        onKickPlayer(player.id);
-                      }
-                    }}
-                    className="px-2 py-1 text-xs" // Adjusted padding and text size
+                    onClick={() => handleKickPlayer(player.id, player.nickname)}
+                    disabled={kickingPlayer === player.id}
+                    loading={kickingPlayer === player.id}
+                    className="px-2 py-1 text-xs ml-2 flex-shrink-0"
                   >
-                    Kick
+                    {kickingPlayer === player.id ? 'Removing...' : 'Remove'}
                   </Button>
                 )}
               </div>

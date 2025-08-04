@@ -100,7 +100,9 @@ export const QuestionDisplay: React.FC<QuestionDisplayProps> = ({
               if (selectedAnswer === index) {
                 // Player's selected answer
                 buttonClass = 'bg-blue-600 text-white border-blue-500 ring-2 ring-blue-400 ring-offset-1 ring-offset-gray-800';
-              } else {
+                  buttonClass = `bg-gray-700 text-white border-gray-600 ${
+                    !playerHasAnswered && timeLeft > 0 ? 'hover:bg-gray-600 hover:border-gray-500 cursor-pointer' : 'cursor-not-allowed opacity-75'
+                  }`;
                 // Other options, not yet selected or waiting for others
                 buttonClass = 'bg-gray-700 hover:bg-gray-600 text-white border-gray-600';
               }
@@ -109,14 +111,19 @@ export const QuestionDisplay: React.FC<QuestionDisplayProps> = ({
             return (
               <Button
                 key={index}
-                variant="ghost"
+                  disabled={showResults || isHost || timeLeft === 0 || playerHasAnswered}
                 onClick={() => !showResults && !isHost && onAnswerSelect?.(index)}
                 disabled={showResults || isHost || timeLeft === 0 || playerHasAnswered} // playerHasAnswered will disable further clicks after one selection
                 className={`p-6 text-left h-auto justify-start ${buttonClass}`}
               >
                 <div className="flex items-center gap-3">
                   <div className="bg-white/20 rounded-lg px-3 py-2 font-bold">
-                    {String.fromCharCode(65 + index)}
+                    <span className="flex-1 text-left">{option}</span>
+                    {showResults && selectedAnswer === index && (
+                      <div className="text-sm opacity-75">
+                        {selectedAnswer === question.correctAnswer ? '✓' : '✗'}
+                      </div>
+                    )}
                   </div>
                   <span className="flex-1">{option}</span>
                 </div>

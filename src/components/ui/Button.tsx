@@ -47,7 +47,7 @@ export const Button: React.FC<ButtonProps> = ({
       {loading ? (
         <>
           <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></div>
-          Loading...
+          {typeof children === 'string' && children.includes('...') ? children : 'Loading...'}
         </>
       ) : (
         <>
