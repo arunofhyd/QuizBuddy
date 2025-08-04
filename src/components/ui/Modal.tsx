@@ -46,11 +46,11 @@ export const Modal: React.FC<ModalProps> = ({
       <div className={`relative w-full ${sizeClasses[size]} bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto`}>
         <div className="flex items-center justify-between p-6 border-b border-white/20">
           {title && (
-            <h2 className="text-xl font-semibold text-white">{title}</h2>
+            <h2 className="text-xl font-bold text-white">{title}</h2>
           )}
           <button
             onClick={onClose}
-            className="p-1 text-white/60 hover:text-white transition-colors"
+            className="p-2 text-white/60 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200"
           >
             <X size={24} />
           </button>

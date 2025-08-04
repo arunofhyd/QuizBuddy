@@ -35,14 +35,14 @@ export const QuizCard: React.FC<QuizCardProps> = ({
           <div className="flex items-center gap-4 text-sm text-white/60 mb-4">
             <div className="flex items-center gap-1">
               <HelpCircle size={16} />
-              <span>{quiz.questions.length} questions</span>
+              <span>{quiz.questions.length} question{quiz.questions.length !== 1 ? 's' : ''}</span>
             </div>
             <div className="flex items-center gap-1">
               <Clock size={16} />
               <span>
-                {Math.round(
+                ~{Math.max(1, Math.round(
                   quiz.questions.reduce((acc, q) => acc + q.timeLimit, 0) / 60
-                )} min
+                ))} min
               </span>
             </div>
           </div>

@@ -157,7 +157,7 @@ export const GamePage: React.FC = () => {
               {gameSession.quiz.title}
             </h1>
             <p className="text-white/70">
-              Playing as: {currentPlayer.nickname} • Room: {gameSession.roomCode}
+              Playing as: <span className="font-semibold text-white">{currentPlayer.nickname}</span> • Room: <span className="font-mono text-blue-400">{gameSession.roomCode}</span>
             </p>
           </div>
           

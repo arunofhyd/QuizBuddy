@@ -5,7 +5,7 @@ import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { useGame } from '../contexts/GameContext';
-import { Play, Users, Crown, Gamepad2, CircleDollarSign } from 'lucide-react';
+import { Play, Users, Crown, Gamepad2, CircleDollarSign, Mail } from 'lucide-react';
 
 export const HomePage: React.FC = () => {
   const [roomCode, setRoomCode] = useState('');
@@ -139,7 +139,7 @@ export const HomePage: React.FC = () => {
         {/* Features Section */}
         <div className="mt-16 text-center">
           <h3 className="text-2xl font-bold text-white mb-8">Why Choose Quiz Buddy?</h3>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto"> {/* Adjusted grid for 4 items */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
             <div className="bg-white/5 rounded-xl p-6 border border-white/10">
               <CircleDollarSign className="text-yellow-400 text-3xl mb-4 mx-auto" />
               <h4 className="text-white font-semibold mb-2">Completely Free</h4>
@@ -170,6 +170,33 @@ export const HomePage: React.FC = () => {
             </div>
           </div>
         </div>
+
+        {/* Footer */}
+        <footer className="mt-20 border-t border-white/10 pt-8">
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="mb-6">
+              <h4 className="text-lg font-semibold text-white mb-4">Need Help or Have Feedback?</h4>
+              <p className="text-white/70 mb-4">
+                We'd love to hear from you! Report bugs, suggest features, or just say hello.
+              </p>
+              <Button
+                variant="outline"
+                onClick={() => window.open('mailto:arunthomas04042001@gmail.com?subject=Quiz%20Buddy%20Feedback', '_blank')}
+                className="inline-flex items-center gap-2"
+              >
+                <Mail size={18} />
+                Contact Developer
+              </Button>
+            </div>
+            
+            <div className="text-white/50 text-sm">
+              <p>&copy; 2024 Quiz Buddy. Made with ❤️ for interactive learning.</p>
+              <p className="mt-2">
+                Built with React, Firebase, and Tailwind CSS
+              </p>
+            </div>
+          </div>
+        </footer>
       </div>
     </Layout>
   );

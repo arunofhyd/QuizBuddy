@@ -70,8 +70,8 @@ export const PlayerLobby: React.FC<PlayerLobbyProps> = ({
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-xl font-semibold text-white">Players</h3>
           {isHost && players.length > 0 && (
-            <div className="text-sm text-white/60">
-              Click "Remove" to kick a player
+            <div className="text-xs text-white/60 bg-white/5 px-2 py-1 rounded">
+              💡 Click "Remove" to kick players
             </div>
           )}
         </div>

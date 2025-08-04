@@ -476,11 +476,12 @@ export const HostPage: React.FC = () => {
 
         {/* Player Count Indicator */}
         {gameSession && (
-          <div className="fixed bottom-6 right-6">
-            <Card className="px-4 py-2">
+          <div className="fixed bottom-6 right-6 z-40">
+            <Card className="px-4 py-2 shadow-lg">
               <div className="flex items-center gap-2 text-white">
                 <Users size={16} />
-                <span>{gameSession.players.length} players</span>
+                <span className="font-semibold">{gameSession.players.length} player{gameSession.players.length !== 1 ? 's' : ''}</span>
+                <div className={`w-2 h-2 rounded-full ${gameSession.status === 'waiting' ? 'bg-yellow-400' : 'bg-green-400'}`} />
               </div>
             </Card>
           </div>

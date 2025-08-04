@@ -30,13 +30,13 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({
   const getRankColors = (rank: number) => {
     switch (rank) {
       case 1:
-        return 'bg-gradient-to-r from-yellow-500/20 to-yellow-600/20 border-yellow-500/40';
+        return 'bg-gradient-to-r from-yellow-500/20 to-yellow-600/20 border-yellow-500/40 shadow-lg shadow-yellow-500/10';
       case 2:
-        return 'bg-gradient-to-r from-gray-300/20 to-gray-400/20 border-gray-400/40';
+        return 'bg-gradient-to-r from-gray-300/20 to-gray-400/20 border-gray-400/40 shadow-lg shadow-gray-400/10';
       case 3:
-        return 'bg-gradient-to-r from-amber-600/20 to-amber-700/20 border-amber-600/40';
+        return 'bg-gradient-to-r from-amber-600/20 to-amber-700/20 border-amber-600/40 shadow-lg shadow-amber-600/10';
       default:
-        return 'bg-white/5 border-white/20';
+        return 'bg-white/5 border-white/20 hover:bg-white/10 transition-colors';
     }
   };
 

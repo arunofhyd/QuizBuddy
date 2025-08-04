@@ -32,22 +32,22 @@ export const LiveMiniLeaderboard: React.FC<LiveMiniLeaderboardProps> = ({ player
           {sortedPlayers.map((player, index) => (
             <li
               key={player.id}
-              className="flex items-center justify-between bg-white/5 p-2 rounded-md hover:bg-white/10 transition-colors"
+              className="flex items-center justify-between bg-white/5 p-3 rounded-lg hover:bg-white/10 transition-all duration-200 border border-white/10"
             >
-              <div className="flex items-center overflow-hidden"> {/* Added overflow-hidden for long nicknames */}
+              <div className="flex items-center overflow-hidden">
                 <span
-                  className={`text-sm font-medium w-7 h-7 flex items-center justify-center rounded-full mr-2 ${
+                  className={`text-sm font-bold w-8 h-8 flex items-center justify-center rounded-full mr-3 shadow-md ${
                     index === 0 ? 'bg-yellow-400 text-yellow-900' :
                     index === 1 ? 'bg-gray-300 text-gray-800' :
-                    index === 2 ? 'bg-yellow-600 text-yellow-100' : // Bronze-like color
+                    index === 2 ? 'bg-yellow-600 text-yellow-100' :
                     'bg-white/10 text-white/70'
                   }`}
                 >
                   {index + 1}
                 </span>
-                <span className="text-white font-medium truncate">{player.nickname}</span>
+                <span className="text-white font-semibold truncate">{player.nickname}</span>
               </div>
-              <span className="text-blue-400 font-semibold whitespace-nowrap"> {/* Added whitespace-nowrap */}
+              <span className="text-blue-400 font-bold whitespace-nowrap text-sm">
                 {player.score.toLocaleString()} pts
               </span>
             </li>

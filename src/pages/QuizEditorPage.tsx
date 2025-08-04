@@ -332,10 +332,13 @@ export const QuizEditorPage: React.FC = () => {
               <label className="block text-sm font-medium text-white mb-4">
                 Answer Options
               </label>
+              <p className="text-sm text-white/60 mb-3">
+                Add 2-6 answer options and select the correct one by clicking the radio button.
+              </p>
               <div className="space-y-3">
                 {options.map((option, index) => (
                   <div key={index} className="flex items-center gap-3">
-                    <div className="bg-white/20 rounded-lg px-3 py-2 font-bold text-white min-w-[40px] text-center">
+                    <div className="bg-blue-600/20 rounded-lg px-3 py-2 font-bold text-blue-300 min-w-[40px] text-center border border-blue-500/30">
                       {String.fromCharCode(65 + index)}
                     </div>
                     <Input
@@ -353,7 +356,7 @@ export const QuizEditorPage: React.FC = () => {
                       name="correctAnswer"
                       checked={correctAnswer === index}
                       onChange={() => setCorrectAnswer(index)}
-                      className="w-5 h-5 text-blue-600 cursor-pointer"
+                      className="w-5 h-5 text-blue-600 cursor-pointer accent-blue-600"
                     />
                     {options.length > 2 && (
                       <Button
@@ -388,9 +391,6 @@ export const QuizEditorPage: React.FC = () => {
                   Add Option
                 </Button>
               )}
-              <p className="text-sm text-white/60 mt-2">
-                Select the correct answer by clicking the radio button. Min 2, Max 6 options.
-              </p>
             </div>
 
             <div>

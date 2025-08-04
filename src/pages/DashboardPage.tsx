@@ -125,13 +125,13 @@ export const DashboardPage: React.FC = () => {
         <div className="flex flex-col md:flex-row justify-between items-center mb-8">
           <div className="mb-4 md:mb-0 text-center md:text-left">
             <h1 className="text-3xl font-bold text-white mb-2">Quiz Dashboard</h1>
-            <p className="text-white/70">Manage your quizzes and host games</p>
+            <p className="text-white/70">Create, manage, and host interactive quizzes</p>
           </div>
           
           <div className="flex flex-col md:flex-row items-center gap-4">
             <div className="flex items-center gap-2 text-white/70 mb-4 md:mb-0">
               <User size={20} />
-              <span>{currentUser?.email}</span>
+              <span className="truncate max-w-[200px]">{currentUser?.email}</span>
             </div>
             <Button variant="ghost" onClick={handleLogout}>
               <LogOut size={20} className="mr-2" />
