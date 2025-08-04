@@ -16,7 +16,6 @@ export const GamePage: React.FC = () => {
   const navigate = useNavigate();
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [hasAnswered, setHasAnswered] = useState(false);
-  const [showKickedMessage, setShowKickedMessage] = useState(false);
 
   const prevStatusRef = useRef<GameSession['status']>();
 
@@ -27,19 +26,10 @@ export const GamePage: React.FC = () => {
   }, [gameSession?.status]);
 
   useEffect(() => {
-    // Handle kicked player scenario
-    if (error && error.includes('removed from the game')) {
-      setShowKickedMessage(true);
-      const timer = setTimeout(() => {
-        navigate('/');
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-    
-    if (!gameSession && !currentPlayer && !showKickedMessage) {
+    if (!gameSession && !currentPlayer) {
       navigate('/');
     }
-  }, [gameSession, currentPlayer, navigate, error, showKickedMessage]);
+  }, [gameSession, currentPlayer, navigate]);
 
   useEffect(() => {
     // Reset answer state when a new question starts
@@ -113,29 +103,6 @@ export const GamePage: React.FC = () => {
   };
 
   if (!gameSession || !currentPlayer) {
-    if (showKickedMessage) {
-      return (
-        <Layout background="game">
-          <div className="container mx-auto px-4 py-8">
-            <Card className="text-center">
-              <div className="text-6xl mb-4">😔</div>
-              <h2 className="text-2xl font-bold text-white mb-4">You've been removed</h2>
-              <p className="text-white/70 mb-6">
-                The host has removed you from the game.
-              </p>
-              <p className="text-white/60 text-sm mb-4">
-                Redirecting to home page in a few seconds...
-              </p>
-              <Button onClick={() => navigate('/')}>
-                <ArrowLeft size={20} className="mr-2" />
-                Go Home Now
-              </Button>
-            </Card>
-          </div>
-        </Layout>
-      );
-    }
-    
     return (
       <Layout background="game">
         <div className="container mx-auto px-4 py-8">

@@ -188,13 +188,6 @@ export const HomePage: React.FC = () => {
                 Contact Developer
               </Button>
             </div>
-            
-            <div className="text-white/50 text-sm">
-              <p>&copy; 2024 Quiz Buddy. Made with ❤️ for interactive learning.</p>
-              <p className="mt-2">
-                Built with React, Firebase, and Tailwind CSS
-              </p>
-            </div>
           </div>
         </footer>
       </div>

@@ -3,7 +3,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { doc, getDoc, addDoc, collection, updateDoc, onSnapshot, Timestamp } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { useAuth } from '../contexts/AuthContext';
-import { useGame } from '../contexts/GameContext'; // Import useGame
 import { Layout } from '../components/layouts/Layout';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
@@ -26,7 +25,6 @@ import {
 export const HostPage: React.FC = () => {
   const { quizId } = useParams<{ quizId: string }>();
   const { currentUser } = useAuth();
-  const { kickPlayer } = useGame(); // Get kickPlayer from context
   const navigate = useNavigate();
 
   const [quiz, setQuiz] = useState<Quiz | null>(null);
@@ -266,21 +264,6 @@ export const HostPage: React.FC = () => {
     return entries;
   };
 
-  const handleKickPlayer = async (playerId: string) => {
-    if (!gameSession || gameSession.hostId !== currentUser?.uid) {
-      setError("You do not have permission to kick players.");
-      return;
-    }
-    
-    try {
-      setError(''); // Clear any previous errors
-      await kickPlayer(playerId);
-    } catch (err) {
-      console.error('HostPage: Error kicking player:', err);
-      setError('Failed to remove player. Please try again.');
-    }
-  };
-
   if (loading) {
     return (
       <Layout background="host">
@@ -369,7 +352,6 @@ export const HostPage: React.FC = () => {
               players={gameSession.players}
               roomCode={gameSession.roomCode}
               isHost={true}
-              onKickPlayer={handleKickPlayer}
               gameStatus={gameSession.status}
             />
             

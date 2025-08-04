@@ -11,7 +11,6 @@ interface GameContextType {
   joinGame: (roomCode: string, nickname: string) => Promise<void>;
   submitAnswer: (selectedOption: number) => Promise<void>;
   leaveGame: () => void;
-  kickPlayer: (playerId: string) => Promise<void>;
 }
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
@@ -176,42 +175,6 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
     setError(null);
   };
 
-  const kickPlayer = async (playerId: string): Promise<void> => {
-    if (!gameSession || !gameSession.id) {
-      console.error('No active game session to kick player from.');
-      setError('No active game session.');
-      return;
-    }
-
-    try {
-      setError(null); // Clear any previous error
-      
-      // Find the player being kicked
-      const kickedPlayer = gameSession.players.find(p => p.id === playerId);
-      if (!kickedPlayer) {
-        setError('Player not found.');
-        return;
-      }
-      
-      const updatedPlayers = gameSession.players.filter(player => player.id !== playerId);
-
-      const sessionRef = doc(db, 'gameSessions', gameSession.id);
-      await updateDoc(sessionRef, { 
-        players: updatedPlayers.map(player => ({
-          ...player,
-          joinedAt: Timestamp.fromDate(player.joinedAt)
-        }))
-      });
-
-      console.log(`Player ${kickedPlayer.nickname} (${playerId}) kicked successfully.`);
-
-    } catch (err) {
-      console.error('Error kicking player:', err);
-      setError('Failed to kick player. Please try again.');
-      throw err;
-    }
-  };
-
   // Listen to game session updates
   useEffect(() => {
     if (!gameSession?.id) return;
@@ -233,17 +196,9 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
           
           setGameSession(updatedSession);
           
-          // Check if current player was kicked
           if (currentPlayer) {
             const updatedCurrentPlayer = updatedSession.players.find(p => p.id === currentPlayer.id);
-            if (updatedCurrentPlayer) {
-              setCurrentPlayer(updatedCurrentPlayer);
-            } else {
-              // Player was kicked - they're no longer in the session
-              setError('You have been removed from the game by the host.');
-              setCurrentPlayer(null);
-              setGameSession(null);
-            }
+            setCurrentPlayer(updatedCurrentPlayer || null);
           }
         } else {
           setError('Game session no longer exists.');
@@ -266,8 +221,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
     error,
     joinGame,
     submitAnswer,
-    leaveGame,
-    kickPlayer
+    leaveGame
   };
 
   return (
